@@ -36,7 +36,7 @@ struct trie
 
 inline trie * newnode()
 {
-    trie*t = new trie();
+    trie* t = new trie();
 //    memset(t,0,sizeof(trie));
     return t;
 }
@@ -44,8 +44,8 @@ void insert(trie * s,char x[])
 {
     int len=strlen(x);
     trie *t;
-    string temp("");
-    temp.clear();
+    string temp = "";
+    // temp.clear();
     for(int i=0;i<len;i++)
     {
         if(x[i]=='/')
@@ -71,7 +71,8 @@ void insert(trie * s,char x[])
         }
         else
         {
-            temp.append(1,x[i]);
+            temp += x[i];
+            // temp.append(1,x[i]);
         }
     }
     bool ok=false;
@@ -94,6 +95,10 @@ void insert(trie * s,char x[])
     }
 }
 
+int cmp( trie* a, trie* b ) {
+    return a->str < b->str;
+}
+
 void print(trie *s,int cnt)
 {
     if(s->isbook)
@@ -110,10 +115,12 @@ void print(trie *s,int cnt)
                 printf("%c",' ');
             cout<<s->str<<endl;
         }
+        sort( s->nextc, s->nextc+s->cnum, cmp );
         for(int i=0;i<s->cnum;i++)
         {
             print(s->nextc[i],cnt+1);
         }
+        sort( s->nextb, s->nextb+s->bnum, cmp );
         for(int i=0;i<s->bnum;i++)
         {
             print(s->nextb[i],cnt+1);
@@ -126,8 +133,10 @@ void deltrie(trie * s)
     int i;
     for(i=0; i < 33 ; i++)
     {
-        if( s->nextb[i] )  deltrie(s->nextb[i]);
-        if( s->nextc[i] )  deltrie(s->nextc[i]);
+        if( s->nextb[i] )
+            deltrie(s->nextb[i]);
+        if( s->nextc[i] )
+            deltrie(s->nextc[i]);
     }
     free(s);
     s=NULL;
@@ -142,34 +151,43 @@ int cmp(const void * a,const void *b)
 {
     return strcmp((char *)a,(char *)b);
 }
+
+// int cmp( void* a, void* b ) {
+//     return strcmp( (char*)a, (char*)b );
+// }
+
+// int cmp( string a, string b ) {
+//     return a < b;
+// }
 int main()
 {
-	freopen("HihoCoder1383.txt", "r", stdin);
+	// freopen("HihoCoder1383.txt", "r", stdin);
 	// freopen("output.txt", "w", stdout);
     int icase=1;
-    while(gets(s))
+    while( gets(s) )
     {
-    	// cout<<s<<endl;
-        int num=0;
+        // int num=0;
+        thead=newnode();
         while(strcmp(s,"0")!=0)
         {
-            num++;
-            for(int i=0;i<int(strlen(s));i++)
-            {
-                ss[num][i]=s[i];
-                if(ss[num][i]==' ')
-                    ss[num][i]=']';
-            }
+            // num++;
+            // for(int i=0;i<int(strlen(s));i++)
+            // {
+            //     ss[num][i]=s[i];
+            //     if(ss[num][i]==' ')
+            //         ss[num][i]=']';
+            // }
+            insert(thead,s);
             gets(s);
         }
-        qsort(ss+1,num,sizeof(ss[0]),cmp);
-        for(int i=1;i<=num;i++)
-            for(int j=0;j<int(strlen(ss[i]));j++)
-                if(ss[i][j]==']')
-                    ss[i][j]=' ';
-        thead=newnode();
-        for(int i=1;i<=num;i++)
-            insert(thead,ss[i]);
+        // qsort(ss+1,num,sizeof(ss[0]),cmp);
+        // for(int i=1;i<=num;i++)
+        //     for(int j=0;j<int(strlen(ss[i]));j++)
+        //         if(ss[i][j]==']')
+        //             ss[i][j]=' ';
+        // thead=newnode();
+        // for(int i=1;i<=num;i++)
+        //     insert(thead,ss[i]);
         printf("Case %d:\n",icase++);
         print(thead,-1);
         deltrie(thead);
